@@ -14,7 +14,7 @@ const AvailableMeals = () => {
       const response = await fetch('http://localhost:4000/products');
 
       if (!response.ok) {
-        throw new Error('Something went wrong!');
+        throw new Error('Qualcosa non ha funzionato!');
       }
 
       const responseData = await response.json();
@@ -57,13 +57,7 @@ const AvailableMeals = () => {
   }
 
   const mealsList = meals.map((meal) => (
-    <MealItem
-      key={meal.id}
-      id={meal.id}
-      name={meal.name}
-      description={meal.description}
-      price={meal.price}
-    />
+    <MealItem key={meal.id} id={meal.id} name={meal.name} price={meal.price} />
   ));
 
   return (

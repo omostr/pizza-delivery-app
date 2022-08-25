@@ -6,12 +6,20 @@
   border-bottom: 1px solid #ccc;
 }
 
-.meal h3 {
-  margin: 0 0 0.25rem 0;
+.btn-details {
+  margin-top: 5px;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: #133eb6;
+  border: 1px solid #133eb6;
+  color: white;
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
 }
 
-.description {
-  font-style: italic;
+.meal h3 {
+  margin: 0 0 0.25rem 0;
 }
 
 .price {

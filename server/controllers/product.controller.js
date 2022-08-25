@@ -6,3 +6,10 @@ exports.getProducts = (req, res, next) => {
     res.json(products);
   });
 };
+
+exports.getProductById = (req, res, next) => {
+  Product.findById(req.params.id, (err, product) => {
+    if (err) next(err);
+    res.json(product);
+  });
+};
