@@ -4,13 +4,16 @@ import Modal from '../UI/Modal';
 import CartItem from './CartItem';
 import classes from './Cart.module.css';
 import CartContext from '../../store/cart-context';
+import Checkout from './Checkout';
 
 const Cart = (props) => {
+  const [isCheckout, setIsCheckout] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [didSubmit, setDidSubmit] = useState(false);
+  const [httpError, setHttpError] = useState();
   const cartCtx = useContext(CartContext);
 
-  const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
+  const totalAmount = `${cartCtx.totalAmount.toFixed(2)}€`;
   const hasItems = cartCtx.items.length > 0;
 
   const cartItemRemoveHandler = (id) => {
@@ -18,10 +21,12 @@ const Cart = (props) => {
   };
 
   const cartItemAddHandler = (item) => {
-    cartCtx.addItem(item);
+    cartCtx.addItem(item, 1);
   };
 
-  const orderHandler = () => {};
+  const orderHandler = () => {
+    setIsCheckout(true);
+  };
 
   const submitOrderHandler = async (userData) => {
     setIsSubmitting(true);
@@ -32,24 +37,25 @@ const Cart = (props) => {
         amount: x.amount,
       };
     });
-    console.log('recipient', userData);
-    console.log('products', products);
 
-    await fetch('http://localhost:4000/orders', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        recipient: userData,
-        products: products,
-      }),
-    });
-    setIsSubmitting(false);
-    setDidSubmit(true);
-
-    cartCtx.clearCart();
+    try {
+      await fetch('http://localhost:4000/orders', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: userData,
+          products: products,
+        }),
+      });
+      setIsSubmitting(false);
+      setDidSubmit(true);
+      cartCtx.clearCart();
+    } catch (error) {
+      setHttpError(error.message);
+    }
   };
 
   const cartItems = (
@@ -70,11 +76,11 @@ const Cart = (props) => {
   const modalActions = (
     <div className={classes.actions}>
       <button className={classes['button--alt']} onClick={props.onClose}>
-        Close
+        Chiudi
       </button>
       {hasItems && (
         <button className={classes.button} onClick={orderHandler}>
-          Order
+          Conferma
         </button>
       )}
     </div>
@@ -84,11 +90,13 @@ const Cart = (props) => {
     <React.Fragment>
       {cartItems}
       <div className={classes.total}>
-        <span>Total Amount</span>
+        <span>Totale</span>
         <span>{totalAmount}</span>
       </div>
-
-      {modalActions}
+      {isCheckout && (
+        <Checkout onConfirm={submitOrderHandler} onCancel={props.onClose} />
+      )}
+      {!isCheckout && modalActions}
     </React.Fragment>
   );
 
@@ -107,9 +115,14 @@ const Cart = (props) => {
 
   return (
     <Modal onClose={props.onClose}>
-      {!isSubmitting && !didSubmit && cartModalContent}
-      {isSubmitting && isSubmittingModalContent}
-      {!isSubmitting && didSubmit && didSubmitModalContent}
+      {httpError && (
+        <section className={classes.CheckoutError}>
+          <p>{httpError}</p>
+        </section>
+      )}
+      {!httpError && !isSubmitting && !didSubmit && cartModalContent}
+      {!httpError && isSubmitting && isSubmittingModalContent}
+      {!httpError && !isSubmitting && didSubmit && didSubmitModalContent}
     </Modal>
   );
 };
