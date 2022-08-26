@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Card from '../UI/Card';
 import MealItem from './MealItem/MealItem';
 import classes from './AvailableMeals.module.css';
+import config from '../../config/config';
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
@@ -11,7 +12,7 @@ const AvailableMeals = () => {
 
   useEffect(() => {
     const fetchMeals = async () => {
-      const response = await fetch('http://localhost:4000/products');
+      const response = await fetch(`${config.SERVER_URL}/products`);
 
       if (!response.ok) {
         throw new Error('Qualcosa non ha funzionato!');

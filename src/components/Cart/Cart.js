@@ -5,6 +5,7 @@ import CartItem from './CartItem';
 import classes from './Cart.module.css';
 import CartContext from '../../store/cart-context';
 import Checkout from './Checkout';
+import config from '../../config/config';
 
 const Cart = (props) => {
   const [isCheckout, setIsCheckout] = useState(false);
@@ -39,7 +40,7 @@ const Cart = (props) => {
     });
 
     try {
-      await fetch('http://localhost:4000/orders', {
+      await fetch(`${config.SERVER_URL}/orders`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',

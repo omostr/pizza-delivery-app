@@ -1,4 +1,4 @@
-# Pizza Delivery Backend
+# Pizza Delivery Back-end
 
 ## Requirements
 
@@ -16,6 +16,8 @@
 ```bash
   npm start
 ```
+
+## Configuration
 
 #### WARNING:
 

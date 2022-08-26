@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import Card from '../UI/Card';
 import classes from './MealDetails.module.css';
+import config from '../../config/config';
 
 const MealDetails = () => {
   const [product, setProduct] = useState([]);
@@ -13,7 +14,7 @@ const MealDetails = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const response = await fetch(`http://localhost:4000/products/${id}`);
+      const response = await fetch(`${config.SERVER_URL}/products/${id}`);
 
       if (!response.ok) {
         throw new Error('Qualcosa non ha funzionato!');
